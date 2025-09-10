@@ -1,1 +1,1 @@
-# mern-personal-finanace-tracker
+Personal Finance Tracker (MERN)
