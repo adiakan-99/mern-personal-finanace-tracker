@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import Header from "../components/Header";
 import TransactionList from "../components/TransactionList";
 import Summary from "../components/Summary";
+import Charts from "../components/Charts";
 import { getTransactions } from "../api";
 
 function Home() {
@@ -104,6 +105,9 @@ function Home() {
 
       {/* Summary with filtered transactions */}
       <Summary transactions={filteredTransactions} />
+
+      {/* Charts (pie + bar) */}
+      <Charts transactions={filteredTransactions} />
 
       {error && <p className="text-red-500">{error}</p>}
 
