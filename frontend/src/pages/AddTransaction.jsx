@@ -3,10 +3,14 @@ import TransactionForm from "../components/TransactionForm";
 
 function AddTransaction() {
   return (
-    <div>
+    <div className="min-h-screen w-full bg-gray-100">
       <Header />
-      <h2 className="text-lg font-bold mb-4">Add New Transaction</h2>
-      <TransactionForm />
+      <main className="p-6">
+        <h2 className="text-2xl font-bold mb-6 text-blue-600">
+          Add Transaction
+        </h2>
+        <TransactionForm />
+      </main>
     </div>
   );
 }
