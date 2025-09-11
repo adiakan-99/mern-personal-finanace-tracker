@@ -1,15 +1,18 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
+import { getTransactions } from "../api";
 import TransactionCard from "./TransactionCard";
 
 function TransactionList() {
   const [transactions, setTransactions] = useState([]);
+  const [error, setError] = useState("");
 
   useEffect(() => {
-    axios.get("/api/transactions")
-      .then((res) => setTransactions(res.data))
-      .catch((err) => console.error(err));
+    getTransactions()
+      .then(setTransactions)
+      .catch(() => setError("Failed to load transactions"));
   }, []);
+
+  if (error) return <p>{error}</p>;
 
   return (
     <div>

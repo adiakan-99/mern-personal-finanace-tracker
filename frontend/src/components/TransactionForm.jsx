@@ -1,6 +1,10 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import axios from "axios";
+import {
+  createTransaction,
+  updateTransaction,
+  getTransactionById,
+} from "../api";
 
 function TransactionForm({ isEdit = false }) {
   const [formData, setFormData] = useState({
@@ -16,8 +20,8 @@ function TransactionForm({ isEdit = false }) {
   // Pre-fill form if editing
   useEffect(() => {
     if (isEdit && id) {
-      axios.get(`/api/transactions/${id}`)
-        .then((res) => setFormData(res.data))
+      getTransactionById(id)
+        .then((data) => setFormData(data))
         .catch((err) => console.error(err));
     }
   }, [isEdit, id]);
@@ -26,17 +30,18 @@ function TransactionForm({ isEdit = false }) {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (isEdit) {
-      axios.put(`/api/transactions/${id}`, formData)
-        .then(() => navigate("/"))
-        .catch((err) => console.error(err));
-    } else {
-      axios.post("/api/transactions", formData)
-        .then(() => navigate("/"))
-        .catch((err) => console.error(err));
+    try {
+      if (isEdit) {
+        await updateTransaction(id, formData);
+      } else {
+        await createTransaction(formData);
+      }
+      navigate("/");
+    } catch (err) {
+      console.error("Error saving transaction:", err);
     }
   };
 
@@ -44,25 +49,53 @@ function TransactionForm({ isEdit = false }) {
     <form onSubmit={handleSubmit}>
       <div>
         <label>Title:</label>
-        <input name="title" value={formData.title} onChange={handleChange} required />
+        <input
+          name="title"
+          value={formData.title}
+          onChange={handleChange}
+          required
+        />
       </div>
+
       <div>
         <label>Amount:</label>
-        <input type="number" name="amount" value={formData.amount} onChange={handleChange} required />
+        <input
+          type="number"
+          name="amount"
+          value={formData.amount}
+          onChange={handleChange}
+          required
+        />
       </div>
+
       <div>
         <label>Date:</label>
-        <input type="date" name="date" value={formData.date} onChange={handleChange} required />
+        <input
+          type="date"
+          name="date"
+          value={formData.date ? formData.date.substring(0, 10) : ""}
+          onChange={handleChange}
+          required
+        />
       </div>
+
       <div>
         <label>Category:</label>
-        <select name="category" value={formData.category} onChange={handleChange}>
+        <select
+          name="category"
+          value={formData.category}
+          onChange={handleChange}
+        >
+          <option>Income</option>
           <option>Food</option>
-          <option>Transport</option>
-          <option>Shopping</option>
+          <option>Rent</option>
+          <option>Travel</option>
+          <option>Entertainment</option>
+          <option>Utilities</option>
           <option>Other</option>
         </select>
       </div>
+
       <button type="submit">{isEdit ? "Update" : "Add"} Transaction</button>
     </form>
   );

@@ -1,14 +1,17 @@
 import { useNavigate, useParams } from "react-router-dom";
-import axios from "axios";
+import { deleteTransaction } from "../api";
 
 function DeleteModal() {
   const { id } = useParams();
   const navigate = useNavigate();
 
-  const handleDelete = () => {
-    axios.delete(`/api/transactions/${id}`)
-      .then(() => navigate("/"))
-      .catch((err) => console.error(err));
+  const handleDelete = async () => {
+    try {
+      await deleteTransaction(id);
+      navigate("/");
+    } catch (err) {
+      console.error("Error deleting transaction:", err);
+    }
   };
 
   return (
