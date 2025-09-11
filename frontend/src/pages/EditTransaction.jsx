@@ -5,9 +5,10 @@ function EditTransaction() {
   return (
     <div>
       <Header />
-      <h2>Edit Transaction</h2>
+      <h2 className="text-lg font-bold mb-4">Edit Transaction</h2>
       <TransactionForm isEdit />
     </div>
   );
 }
+
 export default EditTransaction;

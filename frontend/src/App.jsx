@@ -8,12 +8,6 @@ function App() {
   return (
     <BrowserRouter>
       <div className="p-6">
-        {/* Simple Navbar */}
-        <nav className="flex gap-4 mb-6">
-          <Link to="/" className="text-blue-600 hover:underline">Home</Link>
-          <Link to="/add" className="text-blue-600 hover:underline">Add</Link>
-        </nav>
-
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/add" element={<AddTransaction />} />

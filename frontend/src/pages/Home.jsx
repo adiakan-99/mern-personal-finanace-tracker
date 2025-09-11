@@ -13,7 +13,13 @@ function Home() {
       .catch(() => setError("Failed to load transactions"));
   }, []);
 
-  const balance = transactions.reduce((acc, t) => acc + t.amount, 0);
+  const balance = transactions.reduce((acc, t) => {
+        if (t.category === 'Income') {
+            return acc + t.amount;
+        } else {
+            return acc - t.amount;
+        }
+    }, 0);
 
   return (
     <div>
