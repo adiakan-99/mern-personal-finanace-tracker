@@ -2,6 +2,7 @@ const express = require("express");
 const dotenv = require("dotenv");
 const connectDB = require("./config/db");
 const transactionRoutes = require("./routes/transactionRoutes");
+const cors = require("cors");
 
 dotenv.config();
 
@@ -10,6 +11,14 @@ connectDB();
 const app = express();
 
 app.use(express.json());
+
+app.use(
+    cors({
+        origin: "http://localhost:5173",
+        methods: ["GET", "PUT", "POST", "DELETE"],
+        allowedHeaders: ["Content-type"],
+    })
+)
 
 app.use("/api/transactions", transactionRoutes);
 
