@@ -7,7 +7,7 @@ import DeleteTransaction from "./pages/DeleteTransaction";
 function App() {
   return (
     <BrowserRouter>
-      <div className="p-6">
+      <div className="min-h-screen w-full bg-gray-100">
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/add" element={<AddTransaction />} />

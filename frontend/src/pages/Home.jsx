@@ -18,7 +18,6 @@ function Home() {
   useEffect(() => {
     getTransactions()
       .then((data) => {
-        // Sort transactions by latest date
         const sorted = [...data].sort(
           (a, b) => new Date(b.date) - new Date(a.date)
         );
@@ -48,71 +47,75 @@ function Home() {
   };
 
   return (
-    <div className="p-4">
+    <div className="min-h-screen flex flex-col bg-gray-100">
+      {/* Full-width Header */}
       <Header />
 
-      {/* Filters */}
-      <div className="flex flex-wrap gap-4 my-4 items-end">
-        {/* Category Filter */}
-        <select
-          className="border p-2 rounded"
-          value={category}
-          onChange={(e) => setCategory(e.target.value)}
-        >
-          <option value="All">All Categories</option>
-          <option value="Income">Income</option>
-          <option value="Food">Food</option>
-          <option value="Rent">Rent</option>
-          <option value="Travel">Travel</option>
-          <option value="Entertainment">Entertainment</option>
-          <option value="Utilities">Utilities</option>
-          <option value="Other">Other</option>
-        </select>
+      {/* Main content */}
+      <main className="flex-1 w-full px-4 py-6">
+        {/* Filters */}
+        <div className="flex flex-wrap gap-4 mb-6 items-end">
+          {/* Category Filter */}
+          <select
+            className="border p-2 rounded"
+            value={category}
+            onChange={(e) => setCategory(e.target.value)}
+          >
+            <option value="All">All Categories</option>
+            <option value="Income">Income</option>
+            <option value="Food">Food</option>
+            <option value="Rent">Rent</option>
+            <option value="Travel">Travel</option>
+            <option value="Entertainment">Entertainment</option>
+            <option value="Utilities">Utilities</option>
+            <option value="Other">Other</option>
+          </select>
 
-        {/* Type Filter */}
-        <select
-          className="border p-2 rounded"
-          value={type}
-          onChange={(e) => setType(e.target.value)}
-        >
-          <option value="All">All Types</option>
-          <option value="Income">Income</option>
-          <option value="Expense">Expense</option>
-        </select>
+          {/* Type Filter */}
+          <select
+            className="border p-2 rounded"
+            value={type}
+            onChange={(e) => setType(e.target.value)}
+          >
+            <option value="All">All Types</option>
+            <option value="Income">Income</option>
+            <option value="Expense">Expense</option>
+          </select>
 
-        {/* Date Range */}
-        <input
-          type="date"
-          className="border p-2 rounded"
-          value={fromDate}
-          onChange={(e) => setFromDate(e.target.value)}
-        />
-        <input
-          type="date"
-          className="border p-2 rounded"
-          value={toDate}
-          onChange={(e) => setToDate(e.target.value)}
-        />
+          {/* Date Range */}
+          <input
+            type="date"
+            className="border p-2 rounded"
+            value={fromDate}
+            onChange={(e) => setFromDate(e.target.value)}
+          />
+          <input
+            type="date"
+            className="border p-2 rounded"
+            value={toDate}
+            onChange={(e) => setToDate(e.target.value)}
+          />
 
-        {/* Clear Filters Button */}
-        <button
-          onClick={clearFilters}
-          className="bg-gray-300 text-gray-800 px-4 py-2 rounded hover:bg-gray-400"
-        >
-          Clear Filters
-        </button>
-      </div>
+          {/* Clear Filters Button */}
+          <button
+            onClick={clearFilters}
+            className="bg-gray-300 text-gray-800 px-4 py-2 rounded hover:bg-gray-400"
+          >
+            Clear Filters
+          </button>
+        </div>
 
-      {/* Summary with filtered transactions */}
-      <Summary transactions={filteredTransactions} />
+        {/* Summary */}
+        <Summary transactions={filteredTransactions} />
 
-      {/* Charts (pie + bar) */}
-      <Charts transactions={filteredTransactions} />
+        {/* Charts */}
+        <Charts transactions={filteredTransactions} />
 
-      {error && <p className="text-red-500">{error}</p>}
+        {error && <p className="text-red-500">{error}</p>}
 
-      {/* Transaction List */}
-      <TransactionList transactions={filteredTransactions} />
+        {/* Transaction List */}
+        <TransactionList transactions={filteredTransactions} />
+      </main>
     </div>
   );
 }
