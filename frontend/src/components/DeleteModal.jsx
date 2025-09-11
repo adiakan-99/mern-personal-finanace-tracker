@@ -15,10 +15,25 @@ function DeleteModal() {
   };
 
   return (
-    <div>
-      <h2>Are you sure you want to delete this transaction?</h2>
-      <button onClick={handleDelete}>Yes, Delete</button>
-      <button onClick={() => navigate("/")}>Cancel</button>
+    <div className="max-w-md mx-auto bg-white shadow-lg rounded-lg p-6">
+      <h2 className="text-xl font-bold text-red-600 mb-4">Delete Transaction</h2>
+      <p className="mb-4">
+        Are you sure you want to delete this transaction?
+      </p>
+      <div className="flex gap-3">
+        <button
+          onClick={handleDelete}
+          className="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700"
+        >
+          Yes, Delete
+        </button>
+        <button
+          onClick={() => navigate("/")}
+          className="bg-gray-300 px-4 py-2 rounded-lg hover:bg-gray-400"
+        >
+          Cancel
+        </button>
+      </div>
     </div>
   );
 }

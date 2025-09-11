@@ -21,7 +21,14 @@ function TransactionForm({ isEdit = false }) {
   useEffect(() => {
     if (isEdit && id) {
       getTransactionById(id)
-        .then((data) => setFormData(data))
+        .then((data) =>
+          setFormData({
+            title: data.title || "",
+            amount: data.amount || "",
+            date: data.date ? data.date.substring(0, 10) : "",
+            category: data.category || "Other",
+          })
+        )
         .catch((err) => console.error(err));
     }
   }, [isEdit, id]);
@@ -46,45 +53,56 @@ function TransactionForm({ isEdit = false }) {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <div>
-        <label>Title:</label>
+    <form
+      onSubmit={handleSubmit}
+      className="bg-white p-6 rounded-lg shadow-md max-w-md mx-auto mt-6"
+    >
+      {/* Title */}
+      <div className="mb-4">
+        <label className="block text-sm font-medium mb-1">Title</label>
         <input
           name="title"
           value={formData.title}
           onChange={handleChange}
           required
+          className="w-full border rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
       </div>
 
-      <div>
-        <label>Amount:</label>
+      {/* Amount */}
+      <div className="mb-4">
+        <label className="block text-sm font-medium mb-1">Amount</label>
         <input
           type="number"
           name="amount"
           value={formData.amount}
           onChange={handleChange}
           required
+          className="w-full border rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
       </div>
 
-      <div>
-        <label>Date:</label>
+      {/* Date */}
+      <div className="mb-4">
+        <label className="block text-sm font-medium mb-1">Date</label>
         <input
           type="date"
           name="date"
-          value={formData.date ? formData.date.substring(0, 10) : ""}
+          value={formData.date}
           onChange={handleChange}
           required
+          className="w-full border rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
       </div>
 
-      <div>
-        <label>Category:</label>
+      {/* Category */}
+      <div className="mb-4">
+        <label className="block text-sm font-medium mb-1">Category</label>
         <select
           name="category"
           value={formData.category}
           onChange={handleChange}
+          className="w-full border rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
         >
           <option>Income</option>
           <option>Food</option>
@@ -96,7 +114,22 @@ function TransactionForm({ isEdit = false }) {
         </select>
       </div>
 
-      <button type="submit">{isEdit ? "Update" : "Add"} Transaction</button>
+      {/* Buttons */}
+      <div className="flex gap-2">
+        <button
+          type="submit"
+          className="bg-blue-600 text-white rounded-lg px-4 py-2 hover:bg-blue-700"
+        >
+          {isEdit ? "Update" : "Add"} Transaction
+        </button>
+        <button
+          type="button"
+          onClick={() => navigate("/")}
+          className="bg-gray-300 rounded-lg px-4 py-2 hover:bg-gray-400"
+        >
+          Cancel
+        </button>
+      </div>
     </form>
   );
 }

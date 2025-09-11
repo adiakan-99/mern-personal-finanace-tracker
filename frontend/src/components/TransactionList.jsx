@@ -8,7 +8,13 @@ function TransactionList() {
 
   useEffect(() => {
     getTransactions()
-      .then(setTransactions)
+      .then((data) => {
+        // ✅ Sort transactions by date (latest first)
+        const sorted = [...data].sort(
+          (a, b) => new Date(a.date) - new Date(b.date)
+        );
+        setTransactions(sorted);
+      })
       .catch(() => setError("Failed to load transactions"));
   }, []);
 
