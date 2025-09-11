@@ -1,24 +1,7 @@
-import { useEffect, useState } from "react";
-import { getTransactions } from "../api";
 import TransactionCard from "./TransactionCard";
 
-function TransactionList() {
-  const [transactions, setTransactions] = useState([]);
-  const [error, setError] = useState("");
-
-  useEffect(() => {
-    getTransactions()
-      .then((data) => {
-        // ✅ Sort transactions by date (latest first)
-        const sorted = [...data].sort(
-          (a, b) => new Date(a.date) - new Date(b.date)
-        );
-        setTransactions(sorted);
-      })
-      .catch(() => setError("Failed to load transactions"));
-  }, []);
-
-  if (error) return <p>{error}</p>;
+function TransactionList({ transactions = [], error = "" }) {
+  if (error) return <p className="text-red-500">{error}</p>;
 
   return (
     <div>
@@ -26,9 +9,10 @@ function TransactionList() {
       {transactions.length === 0 ? (
         <p>No transactions yet.</p>
       ) : (
-        transactions.map((t) => (
-          <TransactionCard key={t._id} transaction={t} />
-        ))
+        transactions
+          // ✅ Sort transactions by date (latest first)
+          .sort((a, b) => new Date(b.date) - new Date(a.date))
+          .map((t) => <TransactionCard key={t._id} transaction={t} />)
       )}
     </div>
   );

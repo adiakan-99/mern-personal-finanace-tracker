@@ -1,58 +1,114 @@
 import { useEffect, useState } from "react";
 import Header from "../components/Header";
 import TransactionList from "../components/TransactionList";
+import Summary from "../components/Summary";
 import { getTransactions } from "../api";
 
 function Home() {
   const [transactions, setTransactions] = useState([]);
   const [error, setError] = useState("");
 
+  // Filters
+  const [category, setCategory] = useState("All");
+  const [type, setType] = useState("All");
+  const [fromDate, setFromDate] = useState("");
+  const [toDate, setToDate] = useState("");
+
   useEffect(() => {
     getTransactions()
-      .then(setTransactions)
+      .then((data) => {
+        // Sort transactions by latest date
+        const sorted = [...data].sort(
+          (a, b) => new Date(b.date) - new Date(a.date)
+        );
+        setTransactions(sorted);
+      })
       .catch(() => setError("Failed to load transactions"));
   }, []);
 
-  // ✅ Calculate income, expense, and balance
-  const income = transactions
-    .filter((t) => t.category === "Income")
-    .reduce((sum, t) => sum + t.amount, 0);
+  // Apply filters
+  const filteredTransactions = transactions
+    .filter((tx) => category === "All" || tx.category === category)
+    .filter(
+      (tx) =>
+        type === "All" ||
+        (type === "Income" && tx.category === "Income") ||
+        (type === "Expense" && tx.category !== "Income")
+    )
+    .filter((tx) => (!fromDate || new Date(tx.date) >= new Date(fromDate)))
+    .filter((tx) => (!toDate || new Date(tx.date) <= new Date(toDate)));
 
-  const expense = transactions
-    .filter((t) => t.category !== "Income")
-    .reduce((sum, t) => sum + t.amount, 0);
-
-  const balance = income - expense;
+  // Reset all filters
+  const clearFilters = () => {
+    setCategory("All");
+    setType("All");
+    setFromDate("");
+    setToDate("");
+  };
 
   return (
-    <div>
+    <div className="p-4">
       <Header />
 
-      {/* ✅ Summary Section */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 p-4">
-        <div className="bg-white shadow rounded-lg p-4">
-          <h3 className="text-sm text-gray-500">Income</h3>
-          <p className="text-2xl font-bold text-green-600">₹{income}</p>
-        </div>
-        <div className="bg-white shadow rounded-lg p-4">
-          <h3 className="text-sm text-gray-500">Expense</h3>
-          <p className="text-2xl font-bold text-red-600">₹{expense}</p>
-        </div>
-        <div className="bg-white shadow rounded-lg p-4">
-          <h3 className="text-sm text-gray-500">Balance</h3>
-          <p
-            className={`text-2xl font-bold ${
-              balance >= 0 ? "text-blue-600" : "text-red-600"
-            }`}
-          >
-            ₹{balance}
-          </p>
-        </div>
+      {/* Filters */}
+      <div className="flex flex-wrap gap-4 my-4 items-end">
+        {/* Category Filter */}
+        <select
+          className="border p-2 rounded"
+          value={category}
+          onChange={(e) => setCategory(e.target.value)}
+        >
+          <option value="All">All Categories</option>
+          <option value="Income">Income</option>
+          <option value="Food">Food</option>
+          <option value="Rent">Rent</option>
+          <option value="Travel">Travel</option>
+          <option value="Entertainment">Entertainment</option>
+          <option value="Utilities">Utilities</option>
+          <option value="Other">Other</option>
+        </select>
+
+        {/* Type Filter */}
+        <select
+          className="border p-2 rounded"
+          value={type}
+          onChange={(e) => setType(e.target.value)}
+        >
+          <option value="All">All Types</option>
+          <option value="Income">Income</option>
+          <option value="Expense">Expense</option>
+        </select>
+
+        {/* Date Range */}
+        <input
+          type="date"
+          className="border p-2 rounded"
+          value={fromDate}
+          onChange={(e) => setFromDate(e.target.value)}
+        />
+        <input
+          type="date"
+          className="border p-2 rounded"
+          value={toDate}
+          onChange={(e) => setToDate(e.target.value)}
+        />
+
+        {/* Clear Filters Button */}
+        <button
+          onClick={clearFilters}
+          className="bg-gray-300 text-gray-800 px-4 py-2 rounded hover:bg-gray-400"
+        >
+          Clear Filters
+        </button>
       </div>
 
-      {error && <p className="text-red-500 px-4">{error}</p>}
+      {/* Summary with filtered transactions */}
+      <Summary transactions={filteredTransactions} />
 
-      <TransactionList />
+      {error && <p className="text-red-500">{error}</p>}
+
+      {/* Transaction List */}
+      <TransactionList transactions={filteredTransactions} />
     </div>
   );
 }
