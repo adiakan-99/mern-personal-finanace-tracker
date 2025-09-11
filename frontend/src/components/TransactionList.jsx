@@ -7,7 +7,9 @@ function TransactionList({ transactions = [], error = "" }) {
     <div>
       <h2 className="text-xl font-semibold mb-4">Transactions</h2>
       {transactions.length === 0 ? (
-        <p>No transactions yet.</p>
+        <p className="text-gray-500 text-center mt-4">
+            No transactions found. Add one to get started!
+        </p>
       ) : (
         transactions
           // ✅ Sort transactions by date (latest first)

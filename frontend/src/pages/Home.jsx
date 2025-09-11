@@ -8,6 +8,7 @@ import { getTransactions } from "../api";
 function Home() {
   const [transactions, setTransactions] = useState([]);
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(true); // ✅ loading state
 
   // Filters
   const [category, setCategory] = useState("All");
@@ -16,6 +17,7 @@ function Home() {
   const [toDate, setToDate] = useState("");
 
   useEffect(() => {
+    setLoading(true); // start loading
     getTransactions()
       .then((data) => {
         const sorted = [...data].sort(
@@ -23,7 +25,8 @@ function Home() {
         );
         setTransactions(sorted);
       })
-      .catch(() => setError("Failed to load transactions"));
+      .catch(() => setError("Failed to load transactions"))
+      .finally(() => setLoading(false)); // stop loading
   }, []);
 
   // Apply filters
@@ -113,8 +116,15 @@ function Home() {
 
         {error && <p className="text-red-500">{error}</p>}
 
-        {/* Transaction List */}
-        <TransactionList transactions={filteredTransactions} />
+        {/* Transaction List or Loader */}
+        {loading ? (
+          <div className="flex justify-center mt-6">
+            <div className="animate-spin rounded-full h-6 w-6 border-t-2 border-b-2 border-blue-500"></div>
+            <span className="ml-2 text-gray-600">Loading...</span>
+          </div>
+        ) : (
+          <TransactionList transactions={filteredTransactions} />
+        )}
       </main>
     </div>
   );

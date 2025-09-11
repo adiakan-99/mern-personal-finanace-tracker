@@ -14,6 +14,7 @@ function TransactionForm({ isEdit = false }) {
     category: "Other",
   });
 
+  const [errors, setErrors] = useState({});
   const { id } = useParams();
   const navigate = useNavigate();
 
@@ -37,8 +38,27 @@ function TransactionForm({ isEdit = false }) {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
+  const validateForm = () => {
+    const newErrors = {};
+
+    if (!formData.title.trim()) {
+      newErrors.title = "Title is required";
+    }
+    if (!formData.date) {
+      newErrors.date = "Date is required";
+    }
+    if (Number(formData.amount) === 0) {
+      newErrors.amount = "Amount must not be 0";
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (!validateForm()) return;
 
     try {
       if (isEdit) {
@@ -64,9 +84,9 @@ function TransactionForm({ isEdit = false }) {
           name="title"
           value={formData.title}
           onChange={handleChange}
-          required
           className="w-full border rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
+        {errors.title && <p className="text-red-500 text-sm mt-1">{errors.title}</p>}
       </div>
 
       {/* Amount */}
@@ -77,9 +97,9 @@ function TransactionForm({ isEdit = false }) {
           name="amount"
           value={formData.amount}
           onChange={handleChange}
-          required
           className="w-full border rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
+        {errors.amount && <p className="text-red-500 text-sm mt-1">{errors.amount}</p>}
       </div>
 
       {/* Date */}
@@ -90,9 +110,9 @@ function TransactionForm({ isEdit = false }) {
           name="date"
           value={formData.date}
           onChange={handleChange}
-          required
           className="w-full border rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
+        {errors.date && <p className="text-red-500 text-sm mt-1">{errors.date}</p>}
       </div>
 
       {/* Category */}
@@ -125,7 +145,7 @@ function TransactionForm({ isEdit = false }) {
         <button
           type="button"
           onClick={() => navigate("/")}
-          className="bg-gray-300 rounded-lg px-4 py-2 hover:bg-gray-400"
+          className="bg-gray-300 text-black rounded-lg px-4 py-2 hover:bg-gray-400"
         >
           Cancel
         </button>
