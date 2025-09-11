@@ -1,7 +1,12 @@
-import { useParams } from "react-router-dom";
+import Header from "../components/Header";
+import DeleteModal from "../components/DeleteModal";
 
 function DeleteTransaction() {
-  const { id } = useParams();
-  return <h1 className="text-2xl font-semibold">🗑️ Delete Transaction ID: {id}</h1>;
+  return (
+    <div>
+      <Header />
+      <DeleteModal />
+    </div>
+  );
 }
 export default DeleteTransaction;

@@ -1,4 +1,12 @@
+import Header from "../components/Header";
+import TransactionList from "../components/TransactionList";
+
 function Home() {
-  return <h1 className="text-2xl font-semibold">🏠 Home - Transaction List & Summary</h1>;
+  return (
+    <div>
+      <Header />
+      <TransactionList />
+    </div>
+  );
 }
 export default Home;
