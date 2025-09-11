@@ -12,9 +12,14 @@ const app = express();
 
 app.use(express.json());
 
+const allowedOrigins = [
+  "http://localhost:5173", 
+  "https://mern-personal-finanace-tracker.vercel.app"
+];
+
 app.use(
     cors({
-        origin: "http://localhost:5173",
+        origin: allowedOrigins,
         methods: ["GET", "PUT", "POST", "DELETE"],
         allowedHeaders: ["Content-type"],
     })
